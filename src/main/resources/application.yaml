@@ -1,0 +1,33 @@
+spring:
+  profiles:
+    active: dev
+
+  datasource:
+#    druid:
+      driver-class-name: ${ja.datasource.driver}
+      url: ${ja.datasource.url}
+      username: ${ja.datasource.username}
+      password: ${ja.datasource.password}
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.example.todolist.pojo.po
+
+logging:
+  level:
+    com:
+      example:
+        mapper: debug
+        service: info
+        controller: info
+
+ja:
+  jwt:
+    # jwt??
+    ToDo-secret-key: java
+    # jwt???? 24h
+    ToDo-ttl: 86400
+    # ?????????????
+    ToDo-token-name: token
