@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskByStatusPo {
+    private Integer id;
     private String content;
     private LocalDateTime createTime;
     private Integer status;

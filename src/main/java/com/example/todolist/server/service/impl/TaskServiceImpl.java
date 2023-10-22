@@ -1,7 +1,8 @@
 package com.example.todolist.server.service.impl;
 
 import com.example.todolist.common.constant.StatusConstant;
-import com.example.todolist.common.exception.NotFountByTask;
+import com.example.todolist.common.exception.CantAddByTask;
+import com.example.todolist.pojo.dto.TaskByStatusDto;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.po.TaskByStatusPo;
 import com.example.todolist.pojo.po.TaskPO;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,25 +39,24 @@ public class TaskServiceImpl implements TaskService {
     }
 
     //查询某个任务
-    public TaskDTO selectTaskByContent(TaskDTO taskDTO){
-        for (TaskPO taskPO : taskMapper.AllTask()) {
-            if (taskPO.getContent().equals(taskDTO.getContent())){
-                return taskDTO;
-            }
-        }
-        //循环结束后没返回，表示没有此任务
-        throw new NotFountByTask("没有此任务");
+    public TaskDTO selectByContent(String content){
+        TaskDTO dto=new TaskDTO();
+        TaskPO taskPO = taskMapper.selectByContent(content);
+        BeanUtils.copyProperties(taskPO,dto);
+        return dto;
     }
 
     //添加任务
     @Override
     public boolean addTask(TaskDTO taskDTO) {
         log.info("新增任务的信息：{}",taskDTO);
-        TaskPO taskPO=new TaskPO();
-        BeanUtils.copyProperties(taskDTO,taskPO);
-        int bool=taskMapper.insertTask(taskPO);
+        TaskByStatusPo taskByStatusPo=new TaskByStatusPo();
+        BeanUtils.copyProperties(taskDTO,taskByStatusPo);
+        taskByStatusPo.setCreateTime(LocalDateTime.now());
+        taskByStatusPo.setStatus(StatusConstant.Status_fail);
+        int bool=taskMapper.insertTask(taskByStatusPo);
         if (bool==1){return true;}
-        else {return false;}
+        else {throw new CantAddByTask("任务添加失败");}
     }
 
     //设置status状态
@@ -65,7 +66,19 @@ public class TaskServiceImpl implements TaskService {
                 .createTime(taskDTO.getCreateTime())
                 .status(StatusConstant.Status_success)
                 .build();
-        int i = taskMapper.statusToSuccess(po);
-        return i;
+        int status = taskMapper.statusToSuccess(po);
+        return status;
+    }
+
+    //编辑某个任务内容
+    @Override
+    public boolean updateByTask(TaskByStatusDto taskByStatusDto) {
+        TaskByStatusPo taskByStatusPo=new TaskByStatusPo();
+        BeanUtils.copyProperties(taskByStatusDto,taskByStatusPo);
+        int i = taskMapper.updateByContent(taskByStatusPo);
+        if (i==1){
+            return true;
+        }
+        return false;
     }
 }

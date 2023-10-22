@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class TaskPO {
+    private Integer id;
     private String content;
     private LocalDateTime createTime;
 }
