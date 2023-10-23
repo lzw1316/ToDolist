@@ -18,13 +18,23 @@ public interface TaskMapper {
     @Select("select * from task where content =#{content}")
     TaskPO selectByContent(String content);
     //添加任务
-    @Insert("insert into task(content,create_time) values(#{content},#{createTime})")
+    @Insert("insert into task(content,create_time,status) values(#{content},#{createTime},#{status})")
     int insertTask(TaskByStatusPo taskByStatusPo);
 
+    //编辑任务状态
     @Update("update task set status=#{status} where content=#{content}")
     int statusToSuccess(TaskByStatusPo taskByStatusPo);
 
-    //todo：后期需设置where条件
+    //编辑任务
     @Update("update task set content=#{content},create_time=#{createTime},status=#{status} where id=#{id}")
     int updateByContent(TaskByStatusPo taskByStatusPo);
+
+    //删除一个或者多个任务
+    int deleteByTasks(List<Integer> ids);
+
+    //对任务进行分类，分为已完成和未完成
+    //利用动态sql判断status是否传入的为1或者0
+
+    @Select("select content,create_time from task where status =#{status}")
+    List<TaskByStatusPo> selectByStatus(Integer status);
 }

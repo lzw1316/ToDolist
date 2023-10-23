@@ -2,4 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.todolist.server.mapper.TaskMapper">
+<!--    动态删除-->
+    <delete id="deleteByTasks">
+        delete from task where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+<!--    动态查询-->
+<!--    <select id="selectByStatus" resultType="TaskByStatusPo">-->
+<!--        select * from task-->
+<!--        <where>-->
+<!--            <if test="status!=null">status=#{status}</if></where>-->
+<!--    </select>-->
 </mapper>

@@ -75,10 +75,34 @@ public class TaskServiceImpl implements TaskService {
     public boolean updateByTask(TaskByStatusDto taskByStatusDto) {
         TaskByStatusPo taskByStatusPo=new TaskByStatusPo();
         BeanUtils.copyProperties(taskByStatusDto,taskByStatusPo);
+        taskByStatusPo.setCreateTime(LocalDateTime.now());
         int i = taskMapper.updateByContent(taskByStatusPo);
         if (i==1){
             return true;
         }
         return false;
+    }
+
+    //删除任务
+    @Override
+    public boolean deleteByTasks(List<Integer> ids) {
+        int i = taskMapper.deleteByTasks(ids);
+        if (i==1){return true;}
+        else return false;
+    }
+
+    //根据任务找他分类
+    @Override
+    public List<TaskDTO> selectByStatus(Integer status) {
+        List<TaskDTO> list=new ArrayList<>();
+        List<TaskByStatusPo> pos = taskMapper.selectByStatus(status);
+        for (TaskByStatusPo po : pos) {
+            TaskDTO taskDTO=TaskDTO.builder()
+                    .content(po.getContent())
+                    .createTime(po.getCreateTime())
+                    .build();
+            list.add(taskDTO);
+        }
+        return list;
     }
 }

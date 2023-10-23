@@ -1,4 +1,4 @@
-package com.example.todolist.pojo.dto;
+package com.example.todolist.pojo.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskDTO {
+public class JwtByContentVo {
     private Integer id;
     private String content;
     private LocalDateTime createTime;
+    private Integer status;
+    private String token;
 }
