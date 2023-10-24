@@ -16,4 +16,5 @@ public class TaskDTO {
     private String content;
     private LocalDateTime createTime;
     private String label;
+    private Integer serialNumber;
 }

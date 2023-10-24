@@ -116,4 +116,35 @@ public class TaskServiceImpl implements TaskService {
         Page<TaskByStatusDto> pages= taskMapper.selectByPage(pageDto);
         return Result.success(pages.getResult());
     }
+
+    @Override
+    //拖拽排序
+    // TODO: 2023/10/24 后期需要增加动态sql一键修改值
+    public List<TaskDTO> sortBySerial(Integer startNumber,Integer endNumber) {
+//        List<TaskPO> list=new ArrayList<>();
+        //先查询出全部任务
+        for (TaskPO taskPO : taskMapper.AllTask()) {
+            //查询number对应此刻的任务
+            if (taskPO.getSerialNumber()>=startNumber&&taskPO.getSerialNumber()<endNumber){
+                taskPO.setSerialNumber(taskPO.getSerialNumber()+1);
+//                list.add(taskPO);
+                taskMapper.selectSortBySerial(taskPO);
+            }
+            else if (taskPO.getSerialNumber()==endNumber){
+                taskPO.setSerialNumber(startNumber);
+//                list.add(taskPO);
+                taskMapper.selectSortBySerial(taskPO);
+            }
+        }
+        //将list插入mapper里进行动态修改
+//        taskMapper.selectSortBySerial(list);
+        //再查询全部任务返回给客户端
+        List<TaskDTO> list1=new ArrayList<>();
+        for (TaskPO po : taskMapper.AllTask()) {
+            TaskDTO dto=new TaskDTO();
+            BeanUtils.copyProperties(po,dto);
+            list1.add(dto);
+        }
+        return list1;
+    }
 }

@@ -123,4 +123,11 @@ public class TaskController {
         Result result = taskService.queryByPage(pageDto);
         return result;
     }
+
+    //根据序号排序
+    @GetMapping("/sort")
+    public Result queryBySerial(Integer startNumber,Integer endNumber){
+        List<TaskDTO> list = taskService.sortBySerial(startNumber, endNumber);
+        return Result.success(list);
+    }
 }

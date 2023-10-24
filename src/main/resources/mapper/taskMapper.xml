@@ -27,4 +27,10 @@
         </where>
         order by create_time desc
     </select>
+
+<!--     @Update("update task set serial_number=#{serialNumber} where id=#{id}")-->
+<!--    <update id="selectSortBySerial">-->
+<!--        update task set serial_number=#{serialNumber} where id in-->
+<!--        <foreach collection="taskP"-->
+<!--    </update>-->
 </mapper>

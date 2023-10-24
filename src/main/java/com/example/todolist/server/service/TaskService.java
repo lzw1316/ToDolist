@@ -32,4 +32,7 @@ public interface TaskService {
 
     //分页查询
     Result queryByPage(PageDto pageDto);
+
+    //可拖放排序
+    List<TaskDTO> sortBySerial(Integer startNumber,Integer endNumber);
 }

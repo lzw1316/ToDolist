@@ -15,7 +15,7 @@ public interface TaskMapper {
 
     //todo:后期使用动态sql
     //查询所有任务
-    @Select("select * from task")
+    @Select("select * from task order by serial_number asc")
     List<TaskPO> AllTask();
 
     @Select("select * from task where content =#{content}")
@@ -40,6 +40,12 @@ public interface TaskMapper {
     @Select("select content,create_time from task where status =#{status}")
     List<TaskByStatusPo> selectByStatus(Integer status);
 
-
+    //分页查询
     Page<TaskByStatusDto> selectByPage(PageDto pageDto);
+
+
+    //拖拽排序
+    @Update("update task set serial_number=#{serialNumber} where id=#{id}")
+//    int selectSortBySerial(List<TaskPO> taskPO);
+      int selectSortBySerial(TaskPO taskPO);
 }

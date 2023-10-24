@@ -12,4 +12,5 @@ public class TaskVO {
     private String content;
     private LocalDateTime createTime;
     private String label;
+    private Integer serialNumber;
 }
