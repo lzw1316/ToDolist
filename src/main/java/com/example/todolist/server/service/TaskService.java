@@ -1,5 +1,7 @@
 package com.example.todolist.server.service;
 
+import com.example.todolist.common.result.Result;
+import com.example.todolist.pojo.dto.PageDto;
 import com.example.todolist.pojo.dto.TaskByStatusDto;
 import com.example.todolist.pojo.dto.TaskDTO;
 
@@ -27,4 +29,7 @@ public interface TaskService {
 
     //根据status进行分类
     List<TaskDTO> selectByStatus(Integer status);
+
+    //分页查询
+    Result queryByPage(PageDto pageDto);
 }

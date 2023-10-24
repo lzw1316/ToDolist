@@ -4,6 +4,7 @@ import com.example.todolist.common.constant.StatusConstant;
 import com.example.todolist.common.properties.JwtProperties;
 import com.example.todolist.common.result.Result;
 import com.example.todolist.common.utils.JwtUtils;
+import com.example.todolist.pojo.dto.PageDto;
 import com.example.todolist.pojo.dto.TaskByStatusDto;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.vo.JwtByContentVo;
@@ -113,5 +114,13 @@ public class TaskController {
         Integer success=0;
         List<TaskDTO> dtos = taskService.selectByStatus(success);
         return Result.success(dtos);
+    }
+
+    //分页查询，每次在页面展示10条数据
+    // TODO: 2023/10/24 后期返回pageresult
+    @GetMapping("/page")
+    public Result queryByPage(PageDto pageDto){
+        Result result = taskService.queryByPage(pageDto);
+        return result;
     }
 }

@@ -5,15 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskDTO {
-    private Integer id;
-    private String content;
-    private LocalDateTime createTime;
+public class PageDto {
     private String label;
+    private Integer index;
+    private Integer pages;
 }

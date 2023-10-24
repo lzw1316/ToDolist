@@ -16,4 +16,15 @@
 <!--        <where>-->
 <!--            <if test="status!=null">status=#{status}</if></where>-->
 <!--    </select>-->
+
+<!--    分页查询-->
+    <select id="selectByPage" resultType="com.example.todolist.pojo.dto.TaskByStatusDto">
+        select * from task
+        <where>
+            <if test="label !=null and label !='' ">
+                and label like concat ('%','#{label}','%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>

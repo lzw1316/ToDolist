@@ -16,4 +16,5 @@ public class TaskByStatusPo {
     private String content;
     private LocalDateTime createTime;
     private Integer status;
+    private String label;
 }

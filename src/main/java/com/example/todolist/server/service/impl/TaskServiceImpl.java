@@ -2,12 +2,16 @@ package com.example.todolist.server.service.impl;
 
 import com.example.todolist.common.constant.StatusConstant;
 import com.example.todolist.common.exception.CantAddByTask;
+import com.example.todolist.common.result.Result;
+import com.example.todolist.pojo.dto.PageDto;
 import com.example.todolist.pojo.dto.TaskByStatusDto;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.po.TaskByStatusPo;
 import com.example.todolist.pojo.po.TaskPO;
 import com.example.todolist.server.mapper.TaskMapper;
 import com.example.todolist.server.service.TaskService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -104,5 +108,12 @@ public class TaskServiceImpl implements TaskService {
             list.add(taskDTO);
         }
         return list;
+    }
+
+    @Override
+    public Result queryByPage(PageDto pageDto) {
+        PageHelper.startPage(pageDto.getIndex(),pageDto.getPages());
+        Page<TaskByStatusDto> pages= taskMapper.selectByPage(pageDto);
+        return Result.success(pages.getResult());
     }
 }

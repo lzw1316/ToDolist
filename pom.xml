@@ -78,6 +78,12 @@
             <version>0.11.1</version>
             <scope>runtime</scope>
         </dependency>
+<!--        分类插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.6</version>
+        </dependency>
 
         <!--swagger依赖-->
 <!--        <dependency>-->

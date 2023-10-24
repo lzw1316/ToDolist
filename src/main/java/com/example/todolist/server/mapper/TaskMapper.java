@@ -1,7 +1,10 @@
 package com.example.todolist.server.mapper;
 
+import com.example.todolist.pojo.dto.PageDto;
+import com.example.todolist.pojo.dto.TaskByStatusDto;
 import com.example.todolist.pojo.po.TaskByStatusPo;
 import com.example.todolist.pojo.po.TaskPO;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -18,7 +21,7 @@ public interface TaskMapper {
     @Select("select * from task where content =#{content}")
     TaskPO selectByContent(String content);
     //添加任务
-    @Insert("insert into task(content,create_time,status) values(#{content},#{createTime},#{status})")
+    @Insert("insert into task(content,create_time,status,label) values(#{content},#{createTime},#{status},#{label})")
     int insertTask(TaskByStatusPo taskByStatusPo);
 
     //编辑任务状态
@@ -34,7 +37,9 @@ public interface TaskMapper {
 
     //对任务进行分类，分为已完成和未完成
     //利用动态sql判断status是否传入的为1或者0
-
     @Select("select content,create_time from task where status =#{status}")
     List<TaskByStatusPo> selectByStatus(Integer status);
+
+
+    Page<TaskByStatusDto> selectByPage(PageDto pageDto);
 }

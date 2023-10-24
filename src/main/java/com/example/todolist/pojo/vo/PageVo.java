@@ -1,19 +1,16 @@
-package com.example.todolist.pojo.dto;
+package com.example.todolist.pojo.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskDTO {
-    private Integer id;
-    private String content;
-    private LocalDateTime createTime;
+public class PageVo {
     private String label;
+    private Integer index;
+    private Integer pages;
 }
