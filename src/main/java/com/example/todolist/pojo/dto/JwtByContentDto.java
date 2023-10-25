@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class JwtByContentDto {
     private Integer id;
     private String content;
-    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
     private Integer status;
     private String label;
     private String token;

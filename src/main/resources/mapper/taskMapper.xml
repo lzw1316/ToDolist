@@ -18,19 +18,34 @@
 <!--    </select>-->
 
 <!--    分页查询-->
-    <select id="selectByPage" resultType="com.example.todolist.pojo.dto.TaskByStatusDto">
+    <select id="selectByPage" resultType="com.example.todolist.pojo.dto.TaskDTO">
         select * from task
         <where>
             <if test="label !=null and label !='' ">
-                and label like concat ('%','#{label}','%')
+                and label like concat ('%',#{label},'%')
             </if>
         </where>
-        order by create_time desc
+        order by create_time asc
     </select>
 
-<!--     @Update("update task set serial_number=#{serialNumber} where id=#{id}")-->
-<!--    <update id="selectSortBySerial">-->
-<!--        update task set serial_number=#{serialNumber} where id in-->
-<!--        <foreach collection="taskP"-->
-<!--    </update>-->
+<!--    过滤任务-->
+    <select id="filterByTask" resultType="com.example.todolist.pojo.po.TaskPO">
+        select * from task
+        <where>
+            <if test="content !=null and content !='' ">
+                and content like concat('%',#{content},'%')
+            </if>
+            <if test="label !=null and label !='' ">
+                and label like concat ('%',#{label},'%')
+            </if>
+            <if test="serialNumber !=null">
+                and serial_number=#{serialNumber}
+            </if>
+            <if test="status !=null">
+                and status=#{status}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

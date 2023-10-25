@@ -1,8 +1,7 @@
 package com.example.todolist.server.mapper;
 
 import com.example.todolist.pojo.dto.PageDto;
-import com.example.todolist.pojo.dto.TaskByStatusDto;
-import com.example.todolist.pojo.po.TaskByStatusPo;
+import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.po.TaskPO;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
@@ -18,34 +17,32 @@ public interface TaskMapper {
     @Select("select * from task order by serial_number asc")
     List<TaskPO> AllTask();
 
-    @Select("select * from task where content =#{content}")
-    TaskPO selectByContent(String content);
-    //添加任务
-    @Insert("insert into task(content,create_time,status,label) values(#{content},#{createTime},#{status},#{label})")
-    int insertTask(TaskByStatusPo taskByStatusPo);
+    @Select("select * from task where id =#{id}")
+    TaskPO selectByContent(Integer id);
 
-    //编辑任务状态
-    @Update("update task set status=#{status} where content=#{content}")
-    int statusToSuccess(TaskByStatusPo taskByStatusPo);
+    //添加任务
+
+    // TODO: 2023/10/25 后期 serialNumber自动+1
+    @Insert("""
+            insert into task(content,create_time,update_time,status,label,serial_number) 
+            values(#{content},#{createTime},#{updateTime},#{status},#{label},#{serialNumber})
+            """)
+    int insertTask(TaskDTO taskDTO);
 
     //编辑任务
-    @Update("update task set content=#{content},create_time=#{createTime},status=#{status} where id=#{id}")
-    int updateByContent(TaskByStatusPo taskByStatusPo);
+    @Update("update task set content=#{content},label=#{label},update_time=#{updateTime},status=#{status} where id=#{id}")
+    int updateByContent(TaskPO taskPO);
 
     //删除一个或者多个任务
     int deleteByTasks(List<Integer> ids);
 
-    //对任务进行分类，分为已完成和未完成
-    //利用动态sql判断status是否传入的为1或者0
-    @Select("select content,create_time from task where status =#{status}")
-    List<TaskByStatusPo> selectByStatus(Integer status);
-
     //分页查询
-    Page<TaskByStatusDto> selectByPage(PageDto pageDto);
-
+    Page<TaskDTO> selectByPage(PageDto pageDto);
 
     //拖拽排序
     @Update("update task set serial_number=#{serialNumber} where id=#{id}")
-//    int selectSortBySerial(List<TaskPO> taskPO);
-      int selectSortBySerial(TaskPO taskPO);
+    int selectSortBySerial(TaskPO taskPO);
+
+    //过滤任务
+    List<TaskPO> filterByTask(TaskDTO taskDTO);
 }
