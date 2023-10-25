@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskDTO {
+public class TaskDTO implements Serializable {
     private Integer id;
     private String content;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

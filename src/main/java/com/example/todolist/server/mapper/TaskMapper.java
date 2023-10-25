@@ -5,6 +5,7 @@ import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.po.TaskPO;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -27,6 +28,7 @@ public interface TaskMapper {
             insert into task(content,create_time,update_time,status,label,serial_number) 
             values(#{content},#{createTime},#{updateTime},#{status},#{label},#{serialNumber})
             """)
+    @Options(useGeneratedKeys = true,keyProperty = "id")
     int insertTask(TaskDTO taskDTO);
 
     //编辑任务

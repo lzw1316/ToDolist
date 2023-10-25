@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface TaskService {
 
+
     //查询所有任务
     List<TaskDTO> AllTask();
 

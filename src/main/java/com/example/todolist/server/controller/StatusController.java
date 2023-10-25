@@ -20,7 +20,7 @@ public class StatusController {
 
 
     //标志任务完成，通过传输status=1表示完成
-    @PutMapping("/id")
+    @PutMapping("")
     public Result successByTask(@RequestParam Integer number) {
         log.info("任务id：{}",number);
         //传输id

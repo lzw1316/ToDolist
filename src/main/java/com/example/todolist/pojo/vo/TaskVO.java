@@ -4,11 +4,12 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class TaskVO {
+public class TaskVO implements Serializable {
     private Integer id;
     private String content;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
