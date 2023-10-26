@@ -37,8 +37,9 @@ logging:
 ja:
   jwt:
     # jwt??
-    ToDo-secret-key: javaTodolist12345678901234567890
+    ToDo-secret-key: javaTodolistjavaTodolistjavaTodolist
     # jwt???? 24h
-    ToDo-ttl: 86400
+    ToDo-ttl: 7200000
     # ?????????????
     ToDo-token-name: token
+

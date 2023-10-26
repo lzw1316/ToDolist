@@ -39,6 +39,7 @@ public class TaskController {
         String token =
                 JwtUtils.createJwt(jwtProperties.getToDoSecretKey(), jwtProperties.getToDoTtl(), claims);
         System.out.println(token);
+//        jwtProperties.setToDoTokenName(token);
         //返回所有数据和token令牌
         return Result.success(dtos,token);
 
@@ -96,7 +97,7 @@ public class TaskController {
     //分页查询，每次在页面展示10条数据
     // TODO: 2023/10/24 后期返回pageresult
     @GetMapping("/page")
-    public Result queryByPage(@RequestBody PageDto pageDto) {
+    public Result queryByPage(PageDto pageDto) {
         Result result = taskService.queryByPage(pageDto);
         return result;
     }

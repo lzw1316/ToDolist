@@ -14,8 +14,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Slf4j
 public class JwtInterceptor implements HandlerInterceptor {
 
+
     @Autowired
     private JwtProperties jwtProperties;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //1、从请求头中获取令牌

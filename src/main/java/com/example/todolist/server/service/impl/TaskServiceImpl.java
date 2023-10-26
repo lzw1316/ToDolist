@@ -98,6 +98,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     //拖拽排序
     public List<TaskDTO> sortBySerial(Integer startNumber,Integer endNumber) {
+        Integer temp=0;
+        //比较大小
+        if(startNumber>endNumber){
+            temp=startNumber;
+            startNumber=endNumber;
+            endNumber=temp;
+        }
         //先查询出全部任务
         for (TaskPO taskPO : taskMapper.AllTask()) {
             //对排序的数字重新赋值
