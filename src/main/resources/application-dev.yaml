@@ -5,5 +5,7 @@ ja:
     username: root
     password: 1234
 
-
-
+  aly:
+    endpoint: dysmsapi.aliyuncs.com
+    access-key-id: LTAI5tBETAqBJEaX1VYm1gmT
+    access-key-secret: 269fCmKU0ad16k6RBKl5yuqiAPIJYy

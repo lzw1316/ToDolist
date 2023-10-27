@@ -42,4 +42,11 @@ ja:
     ToDo-ttl: 7200000
     # ?????????????
     ToDo-token-name: token
+  phone:
+    #域名
+    endpoint: ${ja.aly.endpoint}
+    #自己的AccessKey ID
+    access-key-id: ${ja.aly.access-key-id}
+    #自己的AccessKey Secret
+    access-key-secret: ${ja.aly.access-key-secret}
 
