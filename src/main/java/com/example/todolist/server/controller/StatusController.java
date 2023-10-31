@@ -21,10 +21,10 @@ public class StatusController {
 
     //标志任务完成，通过传输status=1表示完成
     @PutMapping("")
-    public Result successByTask(@RequestParam Integer number) {
-        log.info("任务id：{}",number);
+    public Result successByTask(@RequestParam Integer id) {
+        log.info("任务id：{}",id);
         //传输id
-        int status = statusService.statusToSuccess(number);
+        int status = statusService.statusToSuccess(id);
         if (status == StatusConstant.Status_success) {
             return Result.success();
         }
@@ -33,10 +33,10 @@ public class StatusController {
 
     //根据status进行任务分类，0分配成未完成，1则为完成
     // TODO: 2023/10/23  后期需要设置status常量，方便后期修改,   返回标签
-    @GetMapping("/{success}")
-    public Result sortByStatus(@PathVariable Integer success){
-        log.info("查询的状态：{}",success);
-        List<TaskDTO> dtos = statusService.selectByStatus(success);
+    @GetMapping("/{number}")
+    public Result sortByStatus(@PathVariable Integer number){
+        log.info("查询的状态：{}",number);
+        List<TaskDTO> dtos = statusService.selectByStatus(number);
         return Result.success(dtos);
     }
 

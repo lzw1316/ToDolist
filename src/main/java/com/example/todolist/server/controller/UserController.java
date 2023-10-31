@@ -1,11 +1,16 @@
 package com.example.todolist.server.controller;
 
+import com.example.todolist.common.properties.JwtProperties;
 import com.example.todolist.common.result.Result;
+import com.example.todolist.common.utils.JwtUtils;
 import com.example.todolist.pojo.dto.UserDto;
 import com.example.todolist.server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -13,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtProperties jwtProperties;
 
     //获取注册时验证码
     @PostMapping("/smscode")
@@ -35,11 +43,19 @@ public class UserController {
         return Result.error("注册失败");
     }
 
+    //传输jwt令牌，超过令牌时间取消登录
     //登录用户
     @GetMapping("/login")
     public Result login(@RequestBody UserDto userDto){
         boolean login = userService.login(userDto);
-        return Result.success(login);
+        //生成token
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("account",userDto.getAccount());
+        claims.put("password",userDto.getPassword());
+        String token =
+                JwtUtils.createJwt(jwtProperties.getToDoSecretKey(), jwtProperties.getToDoTtl(), claims);
+        System.out.println(token);
+        return Result.success(login,token);
     }
 
     //获取修改密码时的验证码

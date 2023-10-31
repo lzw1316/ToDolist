@@ -12,8 +12,8 @@ public interface UserMapper {
 
 
     //查询，某个用户
-    @Select("select account,password from user where id =#{id}")
-    UserDto selectById(Integer id);
+    @Select("select password from user where account =#{account}")
+    UserDto selectByAccount(String account);
 
     //更改密码
     int updateByPassword(UserDto userDto);

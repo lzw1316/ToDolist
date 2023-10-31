@@ -62,8 +62,8 @@ public class UserServiceImpl implements UserService {
     //登录用户
     @Override
     public boolean login(UserDto userDto) {
-        UserDto dto = userMapper.selectById(userDto.getId());
-        if (userDto.getAccount().equals(dto.getAccount())&&userDto.getPassword().equals(dto.getPassword())){
+        UserDto dto = userMapper.selectByAccount(userDto.getAccount());
+        if (userDto.getPassword().equals(dto.getPassword())){
             return true;
         }
         return false;

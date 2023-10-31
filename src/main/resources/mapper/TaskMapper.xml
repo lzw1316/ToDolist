@@ -10,6 +10,17 @@
         </foreach>
     </delete>
 
+<!--    编辑任务-->
+    <update id="updateByContent">
+        update task
+        <set>
+            <if test="label != null and label != '' "> label=#{label},</if>
+            update_time=#{updateTime},
+            <if test="status != null and status != '' "> status=#{status},</if>
+            <if test="content != null and content != '' "> content=#{content},</if>
+        </set>
+        where id=#{id}
+    </update>
 <!--    动态查询-->
 <!--    <select id="selectByStatus" resultType="TaskByStatusPo">-->
 <!--        select * from task-->

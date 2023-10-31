@@ -1,8 +1,6 @@
 package com.example.todolist.server.controller;
 
-import com.example.todolist.common.properties.JwtProperties;
 import com.example.todolist.common.result.Result;
-import com.example.todolist.common.utils.JwtUtils;
 import com.example.todolist.pojo.dto.PageDto;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.server.service.TaskService;
@@ -13,7 +11,9 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/task")
@@ -23,25 +23,15 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @Autowired
-    private JwtProperties jwtProperties;
 
     //所有任务展示给前端
-    //传输jwt令牌，超过令牌时间则会收回任务展示
+
     @GetMapping("")
     public Result queryAllTask() {
         //查询所有任务
         List<TaskDTO> dtos = taskService.AllTask();
-        //生成token
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("content", dtos.size());
-        claims.put("account", "123456");
-        String token =
-                JwtUtils.createJwt(jwtProperties.getToDoSecretKey(), jwtProperties.getToDoTtl(), claims);
-        System.out.println(token);
-//        jwtProperties.setToDoTokenName(token);
-        //返回所有数据和token令牌
-        return Result.success(dtos,token);
+        //返回所有数据
+        return Result.success(dtos);
 
     }
 
@@ -69,7 +59,7 @@ public class TaskController {
     }
 
 
-    //根据任务内容编辑任务，修改任务，此时修改后日期应为修改时的时间
+    //根据任务id编辑任务，修改任务，此时修改后日期应为修改时的时间
     @PutMapping("")
     public Result editTask(@RequestBody TaskDTO taskDTO) {
         log.info("进行编辑的内容：{}", taskDTO);
@@ -97,7 +87,7 @@ public class TaskController {
     //分页查询，每次在页面展示10条数据
     // TODO: 2023/10/24 后期返回pageresult
     @GetMapping("/page")
-    public Result queryByPage(PageDto pageDto) {
+    public Result queryByPage(@RequestBody PageDto pageDto) {
         Result result = taskService.queryByPage(pageDto);
         return result;
     }

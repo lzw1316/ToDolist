@@ -32,7 +32,7 @@ public interface TaskMapper {
     int insertTask(TaskDTO taskDTO);
 
     //编辑任务
-    @Update("update task set content=#{content},label=#{label},update_time=#{updateTime},status=#{status} where id=#{id}")
+//    @Update("update task set content=#{content},label=#{label},update_time=#{updateTime},status=#{status} where id=#{id}")
     int updateByContent(TaskPO taskPO);
 
     //删除一个或者多个任务

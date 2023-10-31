@@ -7,6 +7,6 @@
             <set>
                 <if test="password !=null">password=#{password}</if>
             </set>
-        where id=#{id}
+        where account=#{account}
     </update>
 </mapper>
