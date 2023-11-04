@@ -16,9 +16,10 @@ import java.time.LocalDateTime;
 public class TaskDTO implements Serializable {
     private Integer id;
     private String content;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private String account;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
     private String label;
     private Integer serialNumber;

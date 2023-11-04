@@ -13,20 +13,18 @@ import java.util.List;
 
 public interface TaskMapper {
 
-    //todo:后期使用动态sql
     //查询所有任务
-    @Select("select * from task order by serial_number asc")
-    List<TaskPO> AllTask();
+    @Select("select * from task  where account=#{account} order by serial_number asc")
+    List<TaskPO> AllTask(String account);
 
-    @Select("select * from task where id =#{id}")
-    TaskPO selectByContent(Integer id);
+    @Select("select * from task where id =#{id} and account=#{account}")
+    TaskPO selectByContent(Integer id,String account);
 
     //添加任务
 
-    // TODO: 2023/10/25 后期 serialNumber自动+1
     @Insert("""
-            insert into task(content,create_time,update_time,status,label,serial_number) 
-            values(#{content},#{createTime},#{updateTime},#{status},#{label},#{serialNumber})
+            insert into task(content,account,create_time,update_time,status,label,serial_number) 
+            values(#{content},#{account},#{createTime},#{updateTime},#{status},#{label},#{serialNumber})
             """)
     @Options(useGeneratedKeys = true,keyProperty = "id")
     int insertTask(TaskDTO taskDTO);
@@ -36,7 +34,7 @@ public interface TaskMapper {
     int updateByContent(TaskPO taskPO);
 
     //删除一个或者多个任务
-    int deleteByTasks(List<Integer> ids);
+    int deleteByTasks(List<Integer> ids,String account);
 
     //分页查询
     Page<TaskDTO> selectByPage(PageDto pageDto);

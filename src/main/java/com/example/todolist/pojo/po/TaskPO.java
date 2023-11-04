@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class TaskPO implements Serializable {
     private Integer id;
     private String content;
+    private String account;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

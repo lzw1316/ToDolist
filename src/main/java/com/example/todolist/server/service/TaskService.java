@@ -8,9 +8,8 @@ import java.util.List;
 
 public interface TaskService {
 
-
     //查询所有任务
-    List<TaskDTO> AllTask();
+    List<TaskDTO> AllTask(String account);
 
     //根据id查询任务
     TaskDTO selectByContent(Integer id);

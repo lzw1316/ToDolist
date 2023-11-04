@@ -1,7 +1,9 @@
 package com.example.todolist.server.controller;
 
+import com.example.todolist.common.constant.JwtClaimsConstant;
 import com.example.todolist.common.properties.JwtProperties;
 import com.example.todolist.common.result.Result;
+import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.common.utils.JwtUtils;
 import com.example.todolist.pojo.dto.UserDto;
 import com.example.todolist.server.service.UserService;
@@ -50,11 +52,13 @@ public class UserController {
         boolean login = userService.login(userDto);
         //生成token
         Map<String, Object> claims = new HashMap<>();
-        claims.put("account",userDto.getAccount());
-        claims.put("password",userDto.getPassword());
+        claims.put(JwtClaimsConstant.User_Account,userDto.getAccount());
+        claims.put(JwtClaimsConstant.User_Password,userDto.getPassword());
+//        BaseUtils.setCurrentAccount(userDto.getAccount());
         String token =
                 JwtUtils.createJwt(jwtProperties.getToDoSecretKey(), jwtProperties.getToDoTtl(), claims);
         System.out.println(token);
+        System.out.println(BaseUtils.getCurrentAccount());
         return Result.success(login,token);
     }
 

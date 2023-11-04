@@ -4,11 +4,12 @@
 <mapper namespace="com.example.todolist.server.mapper.TaskMapper">
 <!--    动态删除-->
     <delete id="deleteByTasks">
-        delete from task where id in
+        delete from task where account=#{account} and id in
         <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>
     </delete>
+
 
 <!--    编辑任务-->
     <update id="updateByContent">
@@ -19,7 +20,7 @@
             <if test="status != null and status != '' "> status=#{status},</if>
             <if test="content != null and content != '' "> content=#{content},</if>
         </set>
-        where id=#{id}
+        where id=#{id} and account=#{account}
     </update>
 <!--    动态查询-->
 <!--    <select id="selectByStatus" resultType="TaskByStatusPo">-->
@@ -35,6 +36,7 @@
             <if test="label !=null and label !='' ">
                 and label like concat ('%',#{label},'%')
             </if>
+                 and account=#{account}
         </where>
         order by create_time asc
     </select>
@@ -55,6 +57,7 @@
             <if test="status !=null">
                 and status=#{status}
             </if>
+                and account=#{account}
         </where>
     </select>
 

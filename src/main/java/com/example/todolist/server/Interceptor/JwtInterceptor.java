@@ -1,6 +1,8 @@
 package com.example.todolist.server.Interceptor;
 
+import com.example.todolist.common.constant.JwtClaimsConstant;
 import com.example.todolist.common.properties.JwtProperties;
+import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.common.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +29,9 @@ public class JwtInterceptor implements HandlerInterceptor {
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtils.praseJwt(jwtProperties.getToDoSecretKey(), token);
+            String account = String.valueOf(claims.get(JwtClaimsConstant.User_Account));
+            BaseUtils.setCurrentAccount(account);
+            log.info("当前登录的账号：{}",account);
             //3、通过，放行
             return true;
         } catch (Exception ex) {

@@ -1,6 +1,7 @@
 package com.example.todolist.server.service.impl;
 
 import com.example.todolist.common.constant.StatusConstant;
+import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.po.TaskPO;
 import com.example.todolist.server.mapper.StatusMapper;
@@ -25,7 +26,7 @@ public class StatusImpl implements StatusService {
 
     public int statusToSuccess(Integer id){
         //先查询完成的是哪个任务
-        TaskPO taskPO = taskMapper.selectByContent(id);
+        TaskPO taskPO = taskMapper.selectByContent(id, BaseUtils.getCurrentAccount());
         //修改状态和更改时间
         taskPO.setStatus(StatusConstant.Status_success);
         taskPO.setUpdateTime(LocalDateTime.now());
@@ -39,7 +40,7 @@ public class StatusImpl implements StatusService {
     @Override
     public List<TaskDTO> selectByStatus(Integer status) {
         List<TaskDTO> list=new ArrayList<>();
-        for (TaskPO po : statusMapper.selectByStatus(status)) {
+        for (TaskPO po : statusMapper.selectByStatus(status,BaseUtils.getCurrentAccount())) {
             TaskDTO taskDTO=TaskDTO.builder()
                     .content(po.getContent())
                     .updateTime(po.getUpdateTime())

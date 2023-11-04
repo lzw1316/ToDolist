@@ -3,6 +3,7 @@ package com.example.todolist.server.service.impl;
 import com.example.todolist.common.constant.StatusConstant;
 import com.example.todolist.common.exception.CantAddByTask;
 import com.example.todolist.common.result.Result;
+import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.pojo.dto.PageDto;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.po.TaskPO;
@@ -14,6 +15,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,13 +29,11 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
 
 
-
-
     //查询所有任务
     @Override
-    public List<TaskDTO> AllTask() {
+    public List<TaskDTO> AllTask(String account) {
         List<TaskDTO> list=new ArrayList<>();
-        List<TaskPO> taskPOS = taskMapper.AllTask();
+        List<TaskPO> taskPOS = taskMapper.AllTask(account);
         for (TaskPO taskPO : taskPOS) {
             TaskDTO taskDTO=new TaskDTO();
             BeanUtils.copyProperties(taskPO,taskDTO);
@@ -45,18 +45,25 @@ public class TaskServiceImpl implements TaskService {
     //查询某个任务
     public TaskDTO selectByContent(Integer id){
         TaskDTO dto=new TaskDTO();
-        TaskPO taskPO = taskMapper.selectByContent(id);
+        TaskPO taskPO = taskMapper.selectByContent(id,BaseUtils.getCurrentAccount());
         BeanUtils.copyProperties(taskPO,dto);
         return dto;
     }
 
     //添加任务
     @Override
+    @Transactional
     public boolean addTask(TaskDTO taskDTO) {
+        log.info("账号：{}",BaseUtils.getCurrentAccount());
         //查询serialNumber最后一个数字
-        List<TaskPO> pos = taskMapper.AllTask();
+        List<TaskPO> pos = taskMapper.AllTask(BaseUtils.getCurrentAccount());
         //每次排序自动+1
-        taskDTO.setSerialNumber(pos.get(pos.size()-1).getSerialNumber()+1);
+        if (pos.size()==0){
+            taskDTO.setSerialNumber(1);
+        }else {
+            taskDTO.setSerialNumber(pos.get(pos.size()-1).getSerialNumber()+1);
+        }
+        taskDTO.setAccount(BaseUtils.getCurrentAccount());
 
         taskDTO.setCreateTime(LocalDateTime.now());
         taskDTO.setUpdateTime(LocalDateTime.now());
@@ -82,7 +89,7 @@ public class TaskServiceImpl implements TaskService {
     //删除任务
     @Override
     public boolean deleteByTasks(List<Integer> ids) {
-        int i = taskMapper.deleteByTasks(ids);
+        int i = taskMapper.deleteByTasks(ids,BaseUtils.getCurrentAccount());
         if (i>0){return true;}
         else return false;
     }
@@ -96,6 +103,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     //拖拽排序
     public List<TaskDTO> sortBySerial(Integer startNumber,Integer endNumber) {
         Integer temp=0;
@@ -106,7 +114,7 @@ public class TaskServiceImpl implements TaskService {
             endNumber=temp;
         }
         //先查询出全部任务
-        for (TaskPO taskPO : taskMapper.AllTask()) {
+        for (TaskPO taskPO : taskMapper.AllTask(BaseUtils.getCurrentAccount())) {
             //对排序的数字重新赋值
             if (taskPO.getSerialNumber()>=startNumber&&taskPO.getSerialNumber()<endNumber){
                 taskPO.setSerialNumber(taskPO.getSerialNumber()+1);
@@ -119,7 +127,7 @@ public class TaskServiceImpl implements TaskService {
         }
         //再查询全部任务返回给客户端
         List<TaskDTO> dtos=new ArrayList<>();
-        for (TaskPO po : taskMapper.AllTask()) {
+        for (TaskPO po : taskMapper.AllTask(BaseUtils.getCurrentAccount())) {
             TaskDTO dto=new TaskDTO();
             BeanUtils.copyProperties(po,dto);
             dtos.add(dto);

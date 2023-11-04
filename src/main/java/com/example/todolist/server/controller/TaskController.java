@@ -1,6 +1,7 @@
 package com.example.todolist.server.controller;
 
 import com.example.todolist.common.result.Result;
+import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.pojo.dto.PageDto;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.server.service.TaskService;
@@ -29,7 +30,7 @@ public class TaskController {
     @GetMapping("")
     public Result queryAllTask() {
         //查询所有任务
-        List<TaskDTO> dtos = taskService.AllTask();
+        List<TaskDTO> dtos = taskService.AllTask(BaseUtils.getCurrentAccount());
         //返回所有数据
         return Result.success(dtos);
 
@@ -63,6 +64,7 @@ public class TaskController {
     @PutMapping("")
     public Result editTask(@RequestBody TaskDTO taskDTO) {
         log.info("进行编辑的内容：{}", taskDTO);
+        taskDTO.setAccount(BaseUtils.getCurrentAccount());
         boolean i = taskService.updateByTask(taskDTO);
         return Result.success();
     }
@@ -88,6 +90,7 @@ public class TaskController {
     // TODO: 2023/10/24 后期返回pageresult
     @GetMapping("/page")
     public Result queryByPage(@RequestBody PageDto pageDto) {
+        pageDto.setAccount(BaseUtils.getCurrentAccount());
         Result result = taskService.queryByPage(pageDto);
         return result;
     }
@@ -102,6 +105,7 @@ public class TaskController {
     //根据用户传输的某一个信息进行过滤任务返回
     @GetMapping("/fifter")
     public Result queryByFifter(@RequestBody TaskDTO taskDTO){
+        taskDTO.setAccount(BaseUtils.getCurrentAccount());
         List<TaskDTO> list = taskService.filterByTask(taskDTO);
         return Result.success(list);
     }
