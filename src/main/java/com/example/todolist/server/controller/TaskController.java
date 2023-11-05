@@ -109,4 +109,12 @@ public class TaskController {
         List<TaskDTO> list = taskService.filterByTask(taskDTO);
         return Result.success(list);
     }
+
+    //开启定时提醒
+//    @PostMapping("/process")
+//    public void process(@RequestParam Integer open) throws Exception {
+//        if (open==1){
+//            taskService.processNoSuccessTask(BaseUtils.getCurrentAccount());
+//        }
+//    }
 }

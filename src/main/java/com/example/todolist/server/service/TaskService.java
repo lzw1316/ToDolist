@@ -31,4 +31,7 @@ public interface TaskService {
 
     //根据用户传输的某一个信息进行过滤任务返回
     List<TaskDTO> filterByTask(TaskDTO taskDTO);
+
+    //开启定时处理
+//    void processNoSuccessTask (String account) throws Exception;
 }

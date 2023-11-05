@@ -4,9 +4,7 @@ public class BaseUtils {
 
     public static ThreadLocal<String> threadLocal = new ThreadLocal<>();
 
-    public static void setCurrentAccount(String account) {
-        threadLocal.set(account);
-    }
+    public static void setCurrentAccount(String account) {threadLocal.set(account);}
 
     public static String getCurrentAccount() {
         return threadLocal.get();

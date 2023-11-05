@@ -2,6 +2,7 @@ package com.example.todolist.server.service.impl;
 
 import com.example.todolist.common.constant.StatusConstant;
 import com.example.todolist.common.exception.CantAddByTask;
+import com.example.todolist.common.properties.SendSmsProperties;
 import com.example.todolist.common.result.Result;
 import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.pojo.dto.PageDto;
@@ -14,6 +15,7 @@ import com.github.pagehelper.PageHelper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Resource
     private TaskMapper taskMapper;
+
+    @Autowired
+    private SendSmsProperties sendSmsProperties;
 
 
     //查询所有任务
@@ -146,4 +151,21 @@ public class TaskServiceImpl implements TaskService {
         }
         return list;
     }
+
+//    @Override
+//    @Scheduled(cron = "0/30 * * * * * ")
+//    public void processNoSuccessTask(String account) throws Exception {
+//        log.info("定时任务开始执行：{}",new Date());
+//        LocalDateTime time = LocalDateTime.now().plusHours(-12);
+//        System.out.println("========="+account);
+//        //先查询此刻账号对应的任务
+//        List<ProcessPo> pos =
+//                taskMapper.processNoSuccess(account, time, StatusConstant.Status_fail);
+//        if (pos.size()>0){
+//            String phone = pos.get(0).getPhone();
+//            System.out.println("任务的条数"+pos.size());
+//            SendSmsUtils.taskNoSuccess(sendSmsProperties.getEndpoint(), sendSmsProperties.getAccessKeyId(),
+//                    sendSmsProperties.getAccessKeySecret(),phone,"有任务未完成，请及时处理");
+//        }
+//    }
 }

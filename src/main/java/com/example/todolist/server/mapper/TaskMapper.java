@@ -2,6 +2,7 @@ package com.example.todolist.server.mapper;
 
 import com.example.todolist.pojo.dto.PageDto;
 import com.example.todolist.pojo.dto.TaskDTO;
+import com.example.todolist.pojo.po.ProcessPo;
 import com.example.todolist.pojo.po.TaskPO;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
@@ -9,6 +10,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskMapper {
@@ -45,4 +47,16 @@ public interface TaskMapper {
 
     //过滤任务
     List<TaskPO> filterByTask(TaskDTO taskDTO);
+
+    //查询是否有经过24h且未完成的任务
+    //select * from task where account=#{account} and create_time < #{time} and status=#{status};
+    //select t.content,u.phone from task t left join user u on t.account=u.account
+//    @Select("""
+//            select * from task where account=#{account} and create_time < #{time} and status=#{status};
+//            """)
+    @Select("""
+            select t.account,u.phone from task t left join user u on t.account=u.account 
+            where  t.create_time < #{time} and t.status=#{status}
+            """)
+    List<ProcessPo> processNoSuccess(LocalDateTime time, Integer status);
 }

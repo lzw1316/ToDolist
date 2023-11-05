@@ -17,6 +17,7 @@ public class TaskPO implements Serializable {
     private Integer id;
     private String content;
     private String account;
+    private String phone;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
