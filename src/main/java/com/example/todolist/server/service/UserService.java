@@ -19,5 +19,5 @@ public interface UserService {
     boolean login(UserDto userDto);
 
     //修改密码
-    boolean forgetpassword(UserDto userDto);
+    String forgetpassword(UserDto userDto);
 }

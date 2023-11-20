@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PagePo {
-    private String label;
+    private String content;
     private Integer index;
     private Integer pages;
 }

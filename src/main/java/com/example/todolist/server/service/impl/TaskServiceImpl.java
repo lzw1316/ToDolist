@@ -2,12 +2,12 @@ package com.example.todolist.server.service.impl;
 
 import com.example.todolist.common.constant.StatusConstant;
 import com.example.todolist.common.exception.CantAddByTask;
-import com.example.todolist.common.properties.SendSmsProperties;
-import com.example.todolist.common.result.Result;
+import com.example.todolist.common.result.PageResult;
 import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.pojo.dto.PageDto;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.po.TaskPO;
+import com.example.todolist.pojo.vo.TaskVO;
 import com.example.todolist.server.mapper.TaskMapper;
 import com.example.todolist.server.service.TaskService;
 import com.github.pagehelper.Page;
@@ -15,13 +15,14 @@ import com.github.pagehelper.PageHelper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -29,10 +30,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Resource
     private TaskMapper taskMapper;
-
-    @Autowired
-    private SendSmsProperties sendSmsProperties;
-
 
     //查询所有任务
     @Override
@@ -48,18 +45,20 @@ public class TaskServiceImpl implements TaskService {
     }
 
     //查询某个任务
-    public TaskDTO selectByContent(Integer id){
-        TaskDTO dto=new TaskDTO();
-        TaskPO taskPO = taskMapper.selectByContent(id,BaseUtils.getCurrentAccount());
-        BeanUtils.copyProperties(taskPO,dto);
-        return dto;
+    public List<TaskDTO> selectByContent(String content){
+        List<TaskDTO> list =new ArrayList<>();
+        for (TaskPO taskPO : taskMapper.selectByContent(content, BaseUtils.getCurrentAccount())) {
+            TaskDTO dto=new TaskDTO();
+            BeanUtils.copyProperties(taskPO,dto);
+            list.add(dto);
+        }
+        return list;
     }
 
     //添加任务
     @Override
-    @Transactional
-    public boolean addTask(TaskDTO taskDTO) {
-        log.info("账号：{}",BaseUtils.getCurrentAccount());
+    @Transactional(rollbackFor = Exception.class)
+    public Map addTask(TaskDTO taskDTO) {
         //查询serialNumber最后一个数字
         List<TaskPO> pos = taskMapper.AllTask(BaseUtils.getCurrentAccount());
         //每次排序自动+1
@@ -69,13 +68,19 @@ public class TaskServiceImpl implements TaskService {
             taskDTO.setSerialNumber(pos.get(pos.size()-1).getSerialNumber()+1);
         }
         taskDTO.setAccount(BaseUtils.getCurrentAccount());
-
         taskDTO.setCreateTime(LocalDateTime.now());
         taskDTO.setUpdateTime(LocalDateTime.now());
         taskDTO.setStatus(StatusConstant.Status_fail);
         int bool=taskMapper.insertTask(taskDTO);
-        if (bool==1){return true;}
-        else {throw new CantAddByTask("任务添加失败");}
+        if (bool==1){
+            Map<String,Object> map=new HashMap<>();
+            int id = pos.get(pos.size() - 1).getId() + 1;
+            map.put("ture",bool);
+            map.put("id",id);
+
+            return map;
+        }
+        throw new CantAddByTask("任务添加失败");
     }
 
     //编辑某个任务内容
@@ -94,23 +99,37 @@ public class TaskServiceImpl implements TaskService {
     //删除任务
     @Override
     public boolean deleteByTasks(List<Integer> ids) {
-        int i = taskMapper.deleteByTasks(ids,BaseUtils.getCurrentAccount());
-        if (i>0){return true;}
-        else return false;
+        int booleanByDle = taskMapper.deleteByTasks(ids,BaseUtils.getCurrentAccount());
+        //查询出全部任务，对serial_number进行重新排序
+        int i=0;
+        if (booleanByDle>0){
+            List<TaskPO> list = taskMapper.AllTask(BaseUtils.getCurrentAccount());
+            if (list.size()!=0){
+                for (TaskPO po : list) {
+                    i++;
+                    po.setSerialNumber(i);
+                    taskMapper.selectSortBySerial(po);
+                }
+            }
+            return true;
+        }
+     return false;
     }
 
     //分页查询
     @Override
-    public Result queryByPage(PageDto pageDto) {
+    public PageResult queryByPage(PageDto pageDto) {
         PageHelper.startPage(pageDto.getIndex(),pageDto.getPages());
-        Page<TaskDTO> pages= taskMapper.selectByPage(pageDto);
-        return Result.success(pages.getResult());
+        Page<TaskVO> pages= taskMapper.selectByPage(pageDto);
+        return new PageResult(pages.getTotal(), pages.getResult());
     }
 
     @Override
     @Transactional
     //拖拽排序
-    public List<TaskDTO> sortBySerial(Integer startNumber,Integer endNumber) {
+    public List<TaskDTO> sortBySerial(Integer startIdNumber,Integer endIdNumber) {
+        Integer startNumber = taskMapper.selectSerialById(startIdNumber);
+        Integer endNumber=taskMapper.selectSerialById(endIdNumber);
         Integer temp=0;
         //比较大小
         if(startNumber>endNumber){
@@ -152,20 +171,4 @@ public class TaskServiceImpl implements TaskService {
         return list;
     }
 
-//    @Override
-//    @Scheduled(cron = "0/30 * * * * * ")
-//    public void processNoSuccessTask(String account) throws Exception {
-//        log.info("定时任务开始执行：{}",new Date());
-//        LocalDateTime time = LocalDateTime.now().plusHours(-12);
-//        System.out.println("========="+account);
-//        //先查询此刻账号对应的任务
-//        List<ProcessPo> pos =
-//                taskMapper.processNoSuccess(account, time, StatusConstant.Status_fail);
-//        if (pos.size()>0){
-//            String phone = pos.get(0).getPhone();
-//            System.out.println("任务的条数"+pos.size());
-//            SendSmsUtils.taskNoSuccess(sendSmsProperties.getEndpoint(), sendSmsProperties.getAccessKeyId(),
-//                    sendSmsProperties.getAccessKeySecret(),phone,"有任务未完成，请及时处理");
-//        }
-//    }
 }

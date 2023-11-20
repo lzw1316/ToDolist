@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class JwtProperties {
 
     //生成jwt令牌的配置
-    private String ToDoSecretKey;
+    private  String ToDoSecretKey;
     private long ToDoTtl;
     private String ToDoTokenName;
 }

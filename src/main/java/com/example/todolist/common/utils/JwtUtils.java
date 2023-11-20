@@ -6,7 +6,6 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public class JwtUtils {
      */
 
     //创建jwt令牌
-    public static String createJwt(String secretKey, long ttlMillis, Map<String, Object> claims){
+        public static String createJwt(String secretKey, long ttlMillis, Map<String, Object> claims){
         //指定256签名算法
         SignatureAlgorithm signatureAlgorithm=SignatureAlgorithm.HS256;
 
@@ -33,8 +32,9 @@ public class JwtUtils {
         JwtBuilder jwtBuilder= Jwts.builder()
                 //设置声明
                 .setClaims(claims)
+
                 //设置签名算法和签名算法的密钥
-                .signWith(signatureAlgorithm,secretKey.getBytes(StandardCharsets.UTF_8))
+                .signWith(signatureAlgorithm,secretKey)
                 //设置过期时间
                 .setExpiration(time);
 
@@ -47,9 +47,9 @@ public class JwtUtils {
      */
     //解密jwt
     public static Claims praseJwt(String secretKey, String token){
-        Claims claims=Jwts.parser()
-                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
-                //设置需要解析的token
+        Claims claims=Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
         return claims;

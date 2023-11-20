@@ -16,29 +16,30 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Slf4j
 public class JwtInterceptor implements HandlerInterceptor {
 
-
     @Autowired
     private JwtProperties jwtProperties;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //1、从请求头中获取令牌
-        String token = request.getHeader(jwtProperties.getToDoTokenName());
-
-        //2、校验令牌
-        try {
-            log.info("jwt校验:{}", token);
-            Claims claims = JwtUtils.praseJwt(jwtProperties.getToDoSecretKey(), token);
-            String account = String.valueOf(claims.get(JwtClaimsConstant.User_Account));
-            BaseUtils.setCurrentAccount(account);
-            log.info("当前登录的账号：{}",account);
-            //3、通过，放行
+        //判断当前请求是否是跨域
+        log.info("请求方式为：{}",request.getMethod());
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())){
             return true;
-        } catch (Exception ex) {
-            //4、不通过，响应401
-            response.setStatus(401);
-            return false;
         }
+        //请求的地址
+        log.info("请求的地址：{}",request.getRequestURL());
+        //获取token
+        String token = request.getHeader("token");
+        //校验令牌
+        Claims claims = JwtUtils.praseJwt(jwtProperties.getToDoSecretKey(), token);
+        //将令牌中的账号存储到线程中
+        String account = String.valueOf(claims.get(JwtClaimsConstant.User_Account));
+        BaseUtils.setCurrentAccount(account);
+        if (token != null) {
+            System.out.println("拦截器中显示当前登录账号为：" + account);
+        }
+        //通过，放行
+        return true;
     }
-    }
+}
 

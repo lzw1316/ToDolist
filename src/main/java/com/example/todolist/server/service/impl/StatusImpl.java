@@ -1,6 +1,7 @@
 package com.example.todolist.server.service.impl;
 
 import com.example.todolist.common.constant.StatusConstant;
+import com.example.todolist.common.exception.NotFountByTask;
 import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.pojo.dto.TaskDTO;
 import com.example.todolist.pojo.po.TaskPO;
@@ -23,16 +24,22 @@ public class StatusImpl implements StatusService {
     @Resource
     private TaskMapper taskMapper;
 
-
-    public int statusToSuccess(Integer id){
+    //标志任务完成
+    public boolean statusToSuccess(Integer id){
         //先查询完成的是哪个任务
-        TaskPO taskPO = taskMapper.selectByContent(id, BaseUtils.getCurrentAccount());
-        //修改状态和更改时间
-        taskPO.setStatus(StatusConstant.Status_success);
-        taskPO.setUpdateTime(LocalDateTime.now());
-        //传入
-        int i = statusMapper.statusToSuccess(taskPO);
-        return i;
+        TaskPO taskPO = taskMapper.selectById(id, BaseUtils.getCurrentAccount());
+        if (taskPO!=null){
+            //修改状态和更改时间
+            taskPO.setStatus(StatusConstant.Status_success);
+            taskPO.setUpdateTime(LocalDateTime.now());
+            //传入
+            int status = statusMapper.statusToSuccess(taskPO);
+            if (status==1){
+                return true;
+            }
+            return false;
+        }
+        throw new NotFountByTask("没有该任务");
     }
 
 
@@ -42,8 +49,11 @@ public class StatusImpl implements StatusService {
         List<TaskDTO> list=new ArrayList<>();
         for (TaskPO po : statusMapper.selectByStatus(status,BaseUtils.getCurrentAccount())) {
             TaskDTO taskDTO=TaskDTO.builder()
+                    .id(po.getId())
                     .content(po.getContent())
                     .updateTime(po.getUpdateTime())
+                    .status(po.status)
+//                    .label(po.getLabel())
                     .build();
             list.add(taskDTO);
         }

@@ -24,16 +24,10 @@ public class MyTask {
 
     @Resource
     private TaskMapper taskMapper;
-
     @Autowired
     private SendSmsProperties sendSmsProperties;
-
     @Resource
     private  SendSmsUtils sendSmsUtils;
-
-
-    public void test(){
-    }
 
     //判断是否需要提醒超时
     //如果此任务超过24h未完成，将发送短信提醒1111
@@ -41,12 +35,19 @@ public class MyTask {
     @Scheduled(cron = "0 0 0,12 * * ? ")
     public void processNoSuccessTask() throws Exception {
         log.info("定时任务开始执行：{}",LocalDateTime.now());
+        //将此刻时间-24h
         LocalDateTime time = LocalDateTime.now().plusHours(-24);
+
+        //查询出未完成的任务
         List<ProcessPo> processPos11 = taskMapper.processNoSuccess(time, StatusConstant.Status_fail);
-        System.out.println(processPos11);
+        log.info("未完成的任务：{}",processPos11);
+
+        //提取不同元素
         Set<ProcessPo> set = new HashSet<>(processPos11);
         List<ProcessPo> uniqueList = new ArrayList<>(set);
-        System.out.println("不同元素集合： " + uniqueList);
+        log.info("不同元素集合：{}",uniqueList);
+
+        //依次发送短信
         for (ProcessPo po : uniqueList) {
             String sms = sendSmsUtils.taskNoSuccess(sendSmsProperties.getEndpoint(), sendSmsProperties.getAccessKeyId(),
                     sendSmsProperties.getAccessKeySecret(), po.getPhone(),"1111");

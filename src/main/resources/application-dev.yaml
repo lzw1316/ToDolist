@@ -1,11 +1,82 @@
-ja:
+#项目的访问接口
+server:
+  port: 3080
+
+#数据源的配置
+spring:
   datasource:
     driver: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/todolist?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: 1234
+    url: jdbc:mysql://114.132.67.226:3306/todolist?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: xiaoli
+    password: abC123456@
 
-  aly:
-    endpoint: dysmsapi.aliyuncs.com
-    access-key-id: LTAI5tBETAqBJEaX1VYm1gmT
-    access-key-secret: 269fCmKU0ad16k6RBKl5yuqiAPIJYy
+#redis的配置
+  data:
+    redis:
+      host: 114.132.67.226
+      port: 6379
+      password: abC123456@
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600s
+      key-prefix: Todolist
+
+#mybatis配置
+mybatis:
+  #指定sql映射文件的位置
+  mapper-locations: classpath:mapper/*.xml
+  #指定给实体类起别名
+  type-aliases-package: com.example.todolist.pojo.po
+  configuration:
+    #开启驼峰命名规则
+    map-underscore-to-camel-case: true
+    #开启日志功能
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#日志
+logging:
+  level:
+    org.apache.ibatis: debug
+    com:
+      example:
+        mapper: debug
+        service: info
+        controller: info
+
+#文件上传到本机的目录
+file:
+  upload:
+    path: D:/upload/
+
+aly:
+  endpoint: dysmsapi.aliyuncs.com
+  access-key-id: LTAI5tBETAqBJEaX1VYm1gmT
+  access-key-secret: 269fCmKU0ad16k6RBKl5yuqiAPIJYy
+
+ja:
+  #jwt令牌的配置
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+#   ToDo-secret-key: javaTodolistjavaTodolistjavaTodolist
+    ToDo-secret-key: EiRF7SH9Su3TRcygA+yEigXYMWDP+o8xcQj0GJDtjUM=
+    # 设置jwt过期时间 24h
+    ToDo-ttl: 86400000
+    # 设置前端传递过来的令牌名称
+    ToDo-token-name: token
+
+  #阿里云短信验证的配置
+  phone:
+    #域名
+    endpoint: ${aly.endpoint}
+    #自己的AccessKey ID
+    access-key-id: ${aly.access-key-id}
+    #自己的AccessKey Secret
+    access-key-secret: ${aly.access-key-secret}
+
+
+
+
+
+

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageDto {
-    private String label;
+    private String content;
     private Integer index;
     private Integer pages;
     private String account;

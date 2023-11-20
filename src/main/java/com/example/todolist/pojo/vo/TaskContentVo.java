@@ -1,5 +1,6 @@
-package com.example.todolist.pojo.dto;
+package com.example.todolist.pojo.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +13,12 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtByContentDto implements Serializable {
+public class TaskContentVo implements Serializable {
     private Integer id;
     private String content;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
-    private Integer status;
     private String label;
-    private String token;
+    private Integer serialNumber;
+    private Integer status;
 }

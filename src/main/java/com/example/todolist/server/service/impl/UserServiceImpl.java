@@ -11,6 +11,10 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
+
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,9 +39,10 @@ public class UserServiceImpl implements UserService {
     @Override
     //校验验证码
     public boolean checkSms(UserDto userDto) {
+        //获取缓存中的验证码
         String sms = sendSmsUtils.getSms(userDto.getPhone());
-        System.out.println("sms="+sms);
-        System.out.println(userDto.getSms());
+        System.out.println("获取缓存中的验证码sms="+sms);
+        System.out.println("用户传输的验证码为："+userDto.getSms());
         if (userDto.getSms().equals(sms)){
             return true;
         }
@@ -47,14 +52,22 @@ public class UserServiceImpl implements UserService {
 
     //注册用户
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean signup(UserDto userDto) {
         if (userDto.getAccount()!=null&&userDto.getAccount()!=""){
-            if (userDto.getPassword()!=null&&userDto.getPassword().equals(userDto.getAgainpassword())){
-                userMapper.insertOneUser(userDto);
+            //判断该账号是否存在
+            UserDto account = userMapper.selectByAccount(userDto.getAccount());
+            if (account==null){
+                if (userDto.getPassword()!=null&&userDto.getPassword().equals(userDto.getAgainpassword())){
+                    //进行md5加密
+                    userDto.setPassword(DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes(StandardCharsets.UTF_8)));
+                    userMapper.insertOneUser(userDto);
+                    return true;
+                }
+                else { throw new PasswordException("密码格式错误");
+                }
             }
-            else { throw new PasswordException("密码格式错误");
-            }
-            return true;
+            throw new AccountException("账号已存在");
         }
         throw new AccountException("账号格式错误");
     }
@@ -62,14 +75,21 @@ public class UserServiceImpl implements UserService {
     //登录用户
     @Override
     public boolean login(UserDto userDto) {
-        UserDto dto = userMapper.selectByAccount(userDto.getAccount());
-        if (userDto.getPassword().equals(dto.getPassword())){
+        String account=userDto.getAccount();
+        String password=userDto.getPassword();
+        UserDto dto = userMapper.selectByAccount(account);
+        if (dto==null){
+            throw new AccountException("账号未找到");
+        }
+        //加密，对比密码是否一样
+        password=DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8));
+        if (password.equals(dto.getPassword())&&account.equals(dto.getAccount())){
             return true;
         }
         return false;
     }
 
-//获取修改密码时所需的验证码
+    //获取修改密码时所需的验证码
     @Override
     @CachePut(value = "smsByPassword",key = "#tele")
     public String sendSmsByPassword(String tele) throws Exception{
@@ -80,16 +100,21 @@ public class UserServiceImpl implements UserService {
 
 
     //修改密码
-    public boolean forgetpassword(UserDto userDto){
+    public String forgetpassword(UserDto userDto){
+        String password=DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes(StandardCharsets.UTF_8));
+        String anginpassword=
+                DigestUtils.md5DigestAsHex(userDto.getAgainpassword().getBytes(StandardCharsets.UTF_8));
+        userDto.setPassword(password);
+        userDto.setAgainpassword(anginpassword);
+        //获取验证码
         String sms = sendSmsUtils.getSmsByPassword(userDto.getPhone());
-        if (userDto.getSms().equals(sms)&&userDto.getPassword().equals(userDto.getAgainpassword())){
+        //校验验证码及密码
+        if (userDto.getSms().equals(sms)&&password.equals(anginpassword)){
             int i = userMapper.updateByPassword(userDto);
             if (i==1){
-                return true;
+                return "修改成功";
             }
         }
-        return false;
+        return "修改密码失败";
     }
-
-
 }

@@ -35,7 +35,16 @@ public class SendSmsUtils {
         return sms;
     }
 
-    //任务超过12h提醒完成该任务
+    /**
+     * 任务超过12h提醒完成该任务
+     * @param endpoint
+     * @param accessKeyId
+     * @param accessKeySecret
+     * @param phone
+     * @param msg
+     * @return
+     * @throws Exception
+     */
     public static String taskNoSuccess(String endpoint,String accessKeyId,String accessKeySecret,String phone,String msg) throws Exception{
                 config
                 //这里修改为自己的AccessKey ID
@@ -46,10 +55,14 @@ public class SendSmsUtils {
         config.endpoint = endpoint;
         Client client = new Client(config);
         SendSmsRequest sendSmsRequest = new SendSmsRequest()
-                .setSignName("阿里云短信测试")//短信签名
-                .setTemplateCode("SMS_154950909")//短信模板
-                .setPhoneNumbers(phone)//这里填写接受短信的手机号码
-                .setTemplateParam("{\"code\":\""+msg+"\"}");//验证码
+                //短信签名
+                .setSignName("阿里云短信测试")
+                //短信模板
+                .setTemplateCode("SMS_154950909")
+                //这里填写接受短信的手机号码
+                .setPhoneNumbers(phone)
+                //验证码
+                .setTemplateParam("{\"code\":\""+msg+"\"}");
         // 复制代码运行请自行打印 API 的返回值
         client.sendSms(sendSmsRequest);
         return msg;

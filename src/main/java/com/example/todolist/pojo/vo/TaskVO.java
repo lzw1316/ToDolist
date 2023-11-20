@@ -1,22 +1,21 @@
 package com.example.todolist.pojo.vo;
 
+import com.example.todolist.pojo.domain.TaskParents;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
-public class TaskVO implements Serializable {
-    private Integer id;
-    private String content;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime createTime;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime updateTime;
-    private String label;
-    private Integer serialNumber;
-    private Integer status;
+@NoArgsConstructor
+public class TaskVO extends TaskParents implements Serializable {
+
+    @Builder(toBuilder = true)
+    public TaskVO(Integer id, String content, LocalDateTime updateTime, Integer serialNumber, Integer status) {
+        super(id, content, updateTime, serialNumber, status);
+    }
+
+
 }

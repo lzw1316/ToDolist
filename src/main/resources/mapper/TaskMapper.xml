@@ -2,7 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.todolist.server.mapper.TaskMapper">
-<!--    动态删除-->
+
+<!-- //查询所有任务-->
+    <select id="AllTask" resultType="com.example.todolist.pojo.po.TaskPO">
+        select id,content,update_time,serial_number,status from task  where account=#{account} order by serial_number asc
+    </select>
+
+<!--    查询一个或者多个任务-->
+    <select id="selectByContent" resultType="com.example.todolist.pojo.po.TaskPO">
+        select id,content,update_time,serial_number,status from task
+        <where>
+            <if test="content != null and content != ''">
+                and  content like concat ('%',#{content},'%')
+            </if>
+            <if test="account != null and account != ''">
+                and account = #{account}
+            </if>
+        </where>
+    </select>
+
+<!--    根据id查询任务-->
+    <select id="selectById" resultType="com.example.todolist.pojo.po.TaskPO">
+        select id,content,account,update_time,serial_number,status from task where id =#{id} and account=#{account}
+    </select>
+
+<!--    添加任务-->
+    <insert id="insertTask">
+        insert into task(
+        content,account,create_time,update_time,status,serial_number
+        )values (
+        #{content},#{account},#{createTime},#{updateTime},#{status},#{serialNumber}
+        )
+    </insert>
+
+    <!--    动态删除-->
     <delete id="deleteByTasks">
         delete from task where account=#{account} and id in
         <foreach collection="ids" item="id" separator="," open="(" close=")">
@@ -10,36 +43,37 @@
         </foreach>
     </delete>
 
-
 <!--    编辑任务-->
     <update id="updateByContent">
         update task
         <set>
-            <if test="label != null and label != '' "> label=#{label},</if>
-            update_time=#{updateTime},
-            <if test="status != null and status != '' "> status=#{status},</if>
             <if test="content != null and content != '' "> content=#{content},</if>
+            update_time=#{updateTime},
         </set>
-        where id=#{id} and account=#{account}
+        where id=#{id}
     </update>
-<!--    动态查询-->
-<!--    <select id="selectByStatus" resultType="TaskByStatusPo">-->
-<!--        select * from task-->
-<!--        <where>-->
-<!--            <if test="status!=null">status=#{status}</if></where>-->
-<!--    </select>-->
 
 <!--    分页查询-->
-    <select id="selectByPage" resultType="com.example.todolist.pojo.dto.TaskDTO">
+    <select id="selectByPage" resultType="com.example.todolist.pojo.vo.TaskVO">
         select * from task
         <where>
-            <if test="label !=null and label !='' ">
-                and label like concat ('%',#{label},'%')
+            <if test="content !=null and content !='' ">
+                and content like concat ('%',#{content},'%')
             </if>
                  and account=#{account}
         </where>
         order by create_time asc
     </select>
+
+<!--      //查询id对应的serialNumber-->
+    <select id="selectSerialById" resultType="Integer">
+        select serial_number from task where id =#{id
+    </select>
+
+<!--    拖拽排序-->
+    <update id="selectSortBySerial">
+        update task set serial_number=#{serialNumber} where id=#{id}
+    </update>
 
 <!--    过滤任务-->
     <select id="filterByTask" resultType="com.example.todolist.pojo.po.TaskPO">
@@ -48,18 +82,20 @@
             <if test="content !=null and content !='' ">
                 and content like concat('%',#{content},'%')
             </if>
-            <if test="label !=null and label !='' ">
-                and label like concat ('%',#{label},'%')
-            </if>
-            <if test="serialNumber !=null">
+            <if test="serialNumber !=null and serialNumber !='' ">
                 and serial_number=#{serialNumber}
             </if>
-            <if test="status !=null">
+            <if test="status !=null and status !='' ">
                 and status=#{status}
             </if>
                 and account=#{account}
         </where>
     </select>
 
+<!--    查询是否有经过24h且未完成的任务-->
+    <select id="processNoSuccess" resultType="com.example.todolist.pojo.po.ProcessPo">
+        select t.account,u.phone from task t left join user u on t.account=u.account
+        where  t.create_time &lt; #{time} and t.status=#{status}
+    </select>
 
 </mapper>

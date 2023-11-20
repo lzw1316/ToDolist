@@ -1,28 +1,28 @@
 package com.example.todolist.pojo.po;
 
-import lombok.AllArgsConstructor;
+import com.example.todolist.pojo.domain.TaskParents;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class TaskPO implements Serializable {
-    private Integer id;
-    private String content;
+public class TaskPO extends TaskParents implements Serializable {
+
     private String account;
     private String phone;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime updateTime;
-    private String label;
-    private Integer serialNumber;
-    private Integer status;
+
+    @Builder(toBuilder = true)
+    public TaskPO(Integer id, String content, LocalDateTime updateTime, Integer serialNumber, Integer status, String account, String phone, LocalDateTime createTime) {
+        super(id, content, updateTime, serialNumber, status);
+        this.account = account;
+        this.phone = phone;
+        this.createTime = createTime;
+    }
 }

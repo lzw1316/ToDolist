@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.todolist.server.mapper.StatusMapper">
+
+<!--    编辑任务状态-->
+    <update id="statusToSuccess">
+        update task set status=#{status},update_time=#{updateTime} where id=#{id} and account=#{account}
+    </update>
+
+<!--    //对任务进行分类，分为已完成和未完成-->
+    <select id="selectByStatus" resultType="com.example.todolist.pojo.po.TaskPO">
+        select id,content,update_time,status from task where status =#{status} and account=#{account}
+    </select>
+
+</mapper>

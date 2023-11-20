@@ -2,52 +2,5 @@ spring:
   profiles:
     active: dev
 
-  datasource:
-#    druid:
-      driver-class-name: ${ja.datasource.driver}
-      url: ${ja.datasource.url}
-      username: ${ja.datasource.username}
-      password: ${ja.datasource.password}
 
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
-#      password: 1234
-  cache:
-    type: redis
-    redis:
-      time-to-live: 600s
-      key-prefix: Todolist
-
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
-  type-aliases-package: com.example.todolist.pojo.po
-
-logging:
-  level:
-    com:
-      example:
-        mapper: debug
-        service: info
-        controller: info
-
-ja:
-  jwt:
-    # jwt??
-    ToDo-secret-key: javaTodolistjavaTodolistjavaTodolist
-    # jwt???? 24h
-    ToDo-ttl: 7200000
-    # ?????????????
-    ToDo-token-name: token
-  phone:
-    #域名
-    endpoint: ${ja.aly.endpoint}
-    #自己的AccessKey ID
-    access-key-id: ${ja.aly.access-key-id}
-    #自己的AccessKey Secret
-    access-key-secret: ${ja.aly.access-key-secret}
 

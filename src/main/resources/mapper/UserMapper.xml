@@ -2,6 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.todolist.server.mapper.UserMapper">
+
+<!--    添加用户-->
+    <insert id="insertOneUser">
+        insert into user(account,password,phone) values(#{account},#{password},#{phone})
+    </insert>
+
+
+<!--    查询某个用户-->
+    <select id="selectByAccount" resultType="com.example.todolist.pojo.dto.UserDto">
+        select account,password from user where account =#{account}
+    </select>
+
+<!--    更改密码-->
     <update id="updateByPassword">
         update user
             <set>

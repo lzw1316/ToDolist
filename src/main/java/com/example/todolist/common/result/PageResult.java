@@ -1,10 +1,16 @@
 package com.example.todolist.common.result;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
-//@Data
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PageResult {
-    private Integer count;
-    private List records;
+    private long total; //总记录数
+    private List tasks; //当前页数据集合
 
 }
