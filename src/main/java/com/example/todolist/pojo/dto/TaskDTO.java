@@ -16,7 +16,7 @@ public class  TaskDTO extends TaskParents implements Serializable {
     private LocalDateTime createTime;
 
     @Builder(toBuilder = true)
-    public TaskDTO(Integer id, String content, LocalDateTime updateTime, Integer serialNumber, Integer status, String account, LocalDateTime createTime) {
+    public TaskDTO(String id, String content, LocalDateTime updateTime, Integer serialNumber, Integer status, String account, LocalDateTime createTime) {
         super(id, content, updateTime, serialNumber, status);
         this.account = account;
         this.createTime = createTime;

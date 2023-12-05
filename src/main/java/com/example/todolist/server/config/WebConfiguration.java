@@ -16,10 +16,9 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-//        registry.addInterceptor(new JwtInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/**")
-                .excludePathPatterns("/");
+                .excludePathPatterns("/user/**","/userEmail/**")
+                .addPathPatterns("userEmail/logout");
     }
 
     //配置跨域

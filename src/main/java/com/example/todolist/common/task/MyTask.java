@@ -9,7 +9,6 @@ import com.example.todolist.server.mapper.TaskMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -32,7 +31,7 @@ public class MyTask {
     //判断是否需要提醒超时
     //如果此任务超过24h未完成，将发送短信提醒1111
     //双表联查，查出该账号对应的手机号码及任务
-    @Scheduled(cron = "0 0 0,12 * * ? ")
+//    @Scheduled(cron = "0 0 0,12 * * ? ")
     public void processNoSuccessTask() throws Exception {
         log.info("定时任务开始执行：{}",LocalDateTime.now());
         //将此刻时间-24h

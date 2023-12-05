@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.todolist.server.mapper.InformationMapper">
+
+<!--    添加用户信息-->
+    <insert id="insertInformation">
+        insert into information(id,user_username,sex,birthday,phone,job,school,city_location,homeland,user_email) values
+        (null,#{userUsername},#{sex},#{birthday},#{phone},#{job},#{school},#{cityLocation},#{homeland},#{userEmail})
+    </insert>
+
+<!--    修改个人信息，用户名修改同时修改-->
+    <update id="updateInformation">
+        update information
+        <set>
+            <if test="userUsername != null and userUsername != '' ">user_username=#{userUsername},</if>
+            <if test="sex != null and sex != '' ">sex=#{sex},</if>
+            <if test="birthday != null">birthday=#{birthday},</if>
+            <if test="phone != null and phone != '' ">phone=#{phone},</if>
+            <if test="job != null and job != '' ">job=#{job},</if>
+            <if test="school != null and school != '' ">school=#{school},</if>
+            <if test="cityLocation != null and cityLocation != '' ">city_location=#{cityLocation},</if>
+            <if test="homeland != null and homeland != '' ">homeland=#{homeland}</if>
+        </set>
+        where user_email=#{userEmail}
+    </update>
+
+<!--    查询是否有该用户的个人信息-->
+    <select id="selectInformationByEmail" resultType="int">
+        select count(*) from information where user_email=#{email}
+    </select>
+
+<!--    查询个人信息-->
+    <select id="selectInformation" resultType="com.example.todolist.pojo.po.InformationPo">
+        select * from information where user_email=#{email}
+    </select>
+
+<!--    删除个人信息-->
+    <delete id="deleteInformation">
+        delete from information where user_email=#{email}
+    </delete>
+
+
+<!--    查询头像链接-->
+    <select id="selectPhoto" resultType="String">
+        select image from information where user_email=#{email}
+    </select>
+
+<!--    更新头像-->
+    <update id="updatePhoto">
+        update information set image=#{image} where user_email=#{email}
+    </update>
+
+</mapper>

@@ -19,7 +19,7 @@ public class TaskPO extends TaskParents implements Serializable {
     private LocalDateTime createTime;
 
     @Builder(toBuilder = true)
-    public TaskPO(Integer id, String content, LocalDateTime updateTime, Integer serialNumber, Integer status, String account, String phone, LocalDateTime createTime) {
+    public TaskPO(String id, String content, LocalDateTime updateTime, Integer serialNumber, Integer status, String account, String phone, LocalDateTime createTime) {
         super(id, content, updateTime, serialNumber, status);
         this.account = account;
         this.phone = phone;

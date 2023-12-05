@@ -28,15 +28,16 @@ public class StatusController {
     //标志任务完成，通过传输status=1表示完成
     /**
      * 标志任务已完成
-     * @param id
+     * @param
      * @return
      */
-    @PutMapping("")
-    public Result successByTask(@RequestParam Integer id) {
-        log.info("任务id：{}",id);
+    @PutMapping
+    public Result successByTask(@RequestBody TaskDTO taskDTO) {
+
+        System.out.println("我来了");
         //传输id
-        boolean status = statusService.statusToSuccess(id);
-        if (status == true) {
+            boolean sta = statusService.statusToSuccess(taskDTO.getId(),taskDTO.getStatus());
+        if (sta == true) {
             return Result.success("该任务已完成");
         }
         return Result.error("没有该任务");

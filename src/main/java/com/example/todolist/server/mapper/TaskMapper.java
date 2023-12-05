@@ -19,7 +19,7 @@ public interface TaskMapper {
     List<TaskPO> selectByContent(String content, String account);
 
     //根据id查询任务
-    TaskPO selectById(Integer id, String account);
+    TaskPO selectById(String id, String account);
 
     //添加任务
     int insertTask(TaskDTO taskDTO);
@@ -28,7 +28,7 @@ public interface TaskMapper {
     int updateByContent(TaskPO taskPO);
 
     //删除一个或者多个任务
-    int deleteByTasks(List<Integer> ids, String account);
+    int deleteByTasks(List<String> ids, String account);
 
     //分页查询
     Page<TaskVO> selectByPage(PageDto pageDto);

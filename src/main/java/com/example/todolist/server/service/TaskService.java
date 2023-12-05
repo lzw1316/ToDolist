@@ -18,12 +18,15 @@ public interface TaskService {
     //增加任务
     Map addTask(TaskDTO taskDTO);
 
+    //增加任务
+    boolean addEmailTask(TaskDTO taskDTO);
+
 
     //更改任务
     boolean updateByTask(TaskDTO taskDTO);
 
     //删除任务
-    boolean deleteByTasks(List<Integer> ids);
+    boolean deleteByTasks(List<String> ids);
 
     //分页查询
     PageResult  queryByPage(PageDto pageDto);

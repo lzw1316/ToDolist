@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 任务
@@ -78,8 +77,11 @@ public class TaskController {
     @PostMapping
     public Result addTask(@RequestBody TaskDTO taskDTO) {
         log.info("新增任务的信息：{}", taskDTO);
-        Map map = taskService.addTask(taskDTO);
-        return Result.success(map);
+        boolean b= taskService.addEmailTask(taskDTO);
+        if (b==true){
+            return Result.success("添加任务成功");
+        }
+       return Result.error("任务添加失败");
     }
 
     /**
@@ -105,10 +107,10 @@ public class TaskController {
      * @return
      */
     @DeleteMapping("/{ids}")
-    public Result removeByTasks(@PathVariable Integer[] ids) {
+    public Result removeByTasks(@PathVariable String[] ids) {
         log.info("删除数据的id：{}", ids);
         //将数组转化成集合
-        List<Integer> list = new ArrayList<>(Arrays.asList(ids));
+        List<String> list = new ArrayList<>(Arrays.asList(ids));
         boolean b = taskService.deleteByTasks(list);
         if (b == true) {
             return Result.success("删除任务成功");

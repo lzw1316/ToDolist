@@ -2,6 +2,7 @@ package com.example.todolist.server.service.impl;
 
 import com.example.todolist.common.exception.AccountException;
 import com.example.todolist.common.exception.PasswordException;
+import com.example.todolist.common.exception.SmsNotRuleException;
 import com.example.todolist.common.properties.SendSmsProperties;
 import com.example.todolist.common.utils.SendSmsUtils;
 import com.example.todolist.pojo.dto.UserDto;
@@ -22,8 +23,12 @@ public class UserServiceImpl implements UserService {
     private  SendSmsUtils sendSmsUtils;
     @Autowired
     private SendSmsProperties sendSmsProperties;
+
     @Resource
     private UserMapper userMapper;
+
+    //密码加盐
+    private static final String pass_salt="LIST";
 
 
     //获取验证码并且存放在redis里
@@ -46,7 +51,7 @@ public class UserServiceImpl implements UserService {
         if (userDto.getSms().equals(sms)){
             return true;
         }
-        return false;
+        throw new SmsNotRuleException("验证码校验失败");
     }
 
 
@@ -60,7 +65,7 @@ public class UserServiceImpl implements UserService {
             if (account==null){
                 if (userDto.getPassword()!=null&&userDto.getPassword().equals(userDto.getAgainpassword())){
                     //进行md5加密
-                    userDto.setPassword(DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes(StandardCharsets.UTF_8)));
+                    userDto.setPassword(DigestUtils.md5DigestAsHex((pass_salt+userDto.getPassword()).getBytes(StandardCharsets.UTF_8)));
                     userMapper.insertOneUser(userDto);
                     return true;
                 }
@@ -117,4 +122,6 @@ public class UserServiceImpl implements UserService {
         }
         return "修改密码失败";
     }
+
+
 }

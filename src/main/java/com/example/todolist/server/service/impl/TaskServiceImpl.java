@@ -74,11 +74,25 @@ public class TaskServiceImpl implements TaskService {
         int bool=taskMapper.insertTask(taskDTO);
         if (bool==1){
             Map<String,Object> map=new HashMap<>();
-            int id = pos.get(pos.size() - 1).getId() + 1;
+//            int id = pos.get(pos.size() - 1).getId() + 1;
+            int id = Integer.parseInt(pos.get(pos.size() - 1).getId() + 1);
             map.put("ture",bool);
             map.put("id",id);
 
             return map;
+        }
+        throw new CantAddByTask("任务添加失败");
+    }
+
+    //添加任务
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean addEmailTask(TaskDTO taskDTO) {
+        taskDTO.setAccount(BaseUtils.getCurrentAccount());
+        taskDTO.setCreateTime(LocalDateTime.now());
+        int bool=taskMapper.insertTask(taskDTO);
+        if (bool==1){
+            return true;
         }
         throw new CantAddByTask("任务添加失败");
     }
@@ -98,7 +112,7 @@ public class TaskServiceImpl implements TaskService {
 
     //删除任务
     @Override
-    public boolean deleteByTasks(List<Integer> ids) {
+    public boolean deleteByTasks(List<String> ids) {
         int booleanByDle = taskMapper.deleteByTasks(ids,BaseUtils.getCurrentAccount());
         //查询出全部任务，对serial_number进行重新排序
         int i=0;

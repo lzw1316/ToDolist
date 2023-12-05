@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class TaskVO extends TaskParents implements Serializable {
 
     @Builder(toBuilder = true)
-    public TaskVO(Integer id, String content, LocalDateTime updateTime, Integer serialNumber, Integer status) {
+    public TaskVO(String id, String content, LocalDateTime updateTime, Integer serialNumber, Integer status) {
         super(id, content, updateTime, serialNumber, status);
     }
 

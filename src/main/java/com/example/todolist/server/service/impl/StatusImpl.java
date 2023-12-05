@@ -1,6 +1,5 @@
 package com.example.todolist.server.service.impl;
 
-import com.example.todolist.common.constant.StatusConstant;
 import com.example.todolist.common.exception.NotFountByTask;
 import com.example.todolist.common.utils.BaseUtils;
 import com.example.todolist.pojo.dto.TaskDTO;
@@ -25,16 +24,16 @@ public class StatusImpl implements StatusService {
     private TaskMapper taskMapper;
 
     //标志任务完成
-    public boolean statusToSuccess(Integer id){
+    public boolean statusToSuccess(String id,Integer status){
         //先查询完成的是哪个任务
         TaskPO taskPO = taskMapper.selectById(id, BaseUtils.getCurrentAccount());
         if (taskPO!=null){
             //修改状态和更改时间
-            taskPO.setStatus(StatusConstant.Status_success);
+            taskPO.setStatus(status);
             taskPO.setUpdateTime(LocalDateTime.now());
             //传入
-            int status = statusMapper.statusToSuccess(taskPO);
-            if (status==1){
+            int sta = statusMapper.statusToSuccess(taskPO);
+            if (sta==1){
                 return true;
             }
             return false;

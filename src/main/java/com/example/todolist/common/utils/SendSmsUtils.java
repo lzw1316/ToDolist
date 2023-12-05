@@ -13,10 +13,16 @@ import java.util.Random;
 public class SendSmsUtils {
     public static Config config = new Config();
 
+    private static String generateCode() {
+        // 生成一个随机的四位数验证码
+        Random random = new Random();
+        int code =random.nextInt(1000,9999);
+        return String.valueOf(code);
+    }
+
     //发送短信
     public static String createSms(String endpoint,String accessKeyId,String accessKeySecret,String phone) throws Exception{
-        Random r=new Random();
-        String sms=""+r.nextInt(1000, 9999);
+        String sms=generateCode();
             config
                 //这里修改为自己的AccessKey ID
                 .setAccessKeyId(accessKeyId)
@@ -57,7 +63,7 @@ public class SendSmsUtils {
         SendSmsRequest sendSmsRequest = new SendSmsRequest()
                 //短信签名
                 .setSignName("阿里云短信测试")
-                //短信模板
+                 //短信模板
                 .setTemplateCode("SMS_154950909")
                 //这里填写接受短信的手机号码
                 .setPhoneNumbers(phone)

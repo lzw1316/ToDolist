@@ -3,14 +3,103 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.todolist.server.mapper.TaskMapper">
 
-<!-- //查询所有任务-->
+<!--&lt;!&ndash; //查询所有任务&ndash;&gt;-->
+<!--    <select id="AllTask" resultType="com.example.todolist.pojo.po.TaskPO">-->
+<!--        select id,content,update_time,serial_number,status from task  where account=#{account} order by serial_number asc-->
+<!--    </select>-->
+
+<!--&lt;!&ndash;    查询一个或者多个任务&ndash;&gt;-->
+<!--    <select id="selectByContent" resultType="com.example.todolist.pojo.po.TaskPO">-->
+<!--        select id,content,update_time,serial_number,status from task-->
+<!--        <where>-->
+<!--            <if test="content != null and content != ''">-->
+<!--                and  content like concat ('%',#{content},'%')-->
+<!--            </if>-->
+<!--            <if test="account != null and account != ''">-->
+<!--                and account = #{account}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--&lt;!&ndash;    根据id查询任务&ndash;&gt;-->
+<!--    <select id="selectById" resultType="com.example.todolist.pojo.po.TaskPO">-->
+<!--        select id,content,account,update_time,serial_number,status from task where id =#{id} and account=#{account}-->
+<!--    </select>-->
+
+<!--&lt;!&ndash;    添加任务&ndash;&gt;-->
+<!--    <insert id="insertTask">-->
+<!--        insert into task(-->
+<!--        content,account,create_time,update_time,status,serial_number-->
+<!--        )values (-->
+<!--        #{content},#{account},#{createTime},#{updateTime},#{status},#{serialNumber}-->
+<!--        )-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash;    动态删除&ndash;&gt;-->
+<!--    <delete id="deleteByTasks">-->
+<!--        delete from task where account=#{account} and id in-->
+<!--        <foreach collection="ids" item="id" separator="," open="(" close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+<!--&lt;!&ndash;    编辑任务&ndash;&gt;-->
+<!--    <update id="updateByContent">-->
+<!--        update task-->
+<!--        <set>-->
+<!--            <if test="content != null and content != '' "> content=#{content},</if>-->
+<!--            update_time=#{updateTime},-->
+<!--        </set>-->
+<!--        where id=#{id}-->
+<!--    </update>-->
+
+<!--&lt;!&ndash;    分页查询&ndash;&gt;-->
+<!--    <select id="selectByPage" resultType="com.example.todolist.pojo.vo.TaskVO">-->
+<!--        select * from task-->
+<!--        <where>-->
+<!--            <if test="content !=null and content !='' ">-->
+<!--                and content like concat ('%',#{content},'%')-->
+<!--            </if>-->
+<!--                 and account=#{account}-->
+<!--        </where>-->
+<!--        order by create_time asc-->
+<!--    </select>-->
+
+<!--&lt;!&ndash;      //查询id对应的serialNumber&ndash;&gt;-->
+<!--    <select id="selectSerialById" resultType="Integer">-->
+<!--        select serial_number from task where id =#{id-->
+<!--    </select>-->
+
+<!--&lt;!&ndash;    拖拽排序&ndash;&gt;-->
+<!--    <update id="selectSortBySerial">-->
+<!--        update task set serial_number=#{serialNumber} where id=#{id}-->
+<!--    </update>-->
+
+<!--&lt;!&ndash;    过滤任务&ndash;&gt;-->
+<!--    <select id="filterByTask" resultType="com.example.todolist.pojo.po.TaskPO">-->
+<!--        select * from task-->
+<!--        <where>-->
+<!--            <if test="content !=null and content !='' ">-->
+<!--                and content like concat('%',#{content},'%')-->
+<!--            </if>-->
+<!--            <if test="serialNumber !=null and serialNumber !='' ">-->
+<!--                and serial_number=#{serialNumber}-->
+<!--            </if>-->
+<!--            <if test="status !=null and status !='' ">-->
+<!--                and status=#{status}-->
+<!--            </if>-->
+<!--                and account=#{account}-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <!-- //查询所有任务-->
     <select id="AllTask" resultType="com.example.todolist.pojo.po.TaskPO">
-        select id,content,update_time,serial_number,status from task  where account=#{account} order by serial_number asc
+        select id,content,update_time,serial_number,status from taskemail  where account=#{account} order by serial_number asc
     </select>
 
 <!--    查询一个或者多个任务-->
     <select id="selectByContent" resultType="com.example.todolist.pojo.po.TaskPO">
-        select id,content,update_time,serial_number,status from task
+        select id,content,update_time,serial_number,status from taskemail
         <where>
             <if test="content != null and content != ''">
                 and  content like concat ('%',#{content},'%')
@@ -23,21 +112,21 @@
 
 <!--    根据id查询任务-->
     <select id="selectById" resultType="com.example.todolist.pojo.po.TaskPO">
-        select id,content,account,update_time,serial_number,status from task where id =#{id} and account=#{account}
+        select id,content,account,update_time,serial_number,status from taskemail where id =#{id} and account=#{account}
     </select>
 
 <!--    添加任务-->
     <insert id="insertTask">
-        insert into task(
-        content,account,create_time,update_time,status,serial_number
+        insert into taskemail(
+        id,content,account,create_time,update_time,status,serial_number
         )values (
-        #{content},#{account},#{createTime},#{updateTime},#{status},#{serialNumber}
+         #{id},#{content},#{account},#{createTime},#{updateTime},#{status},#{serialNumber}
         )
     </insert>
 
     <!--    动态删除-->
     <delete id="deleteByTasks">
-        delete from task where account=#{account} and id in
+        delete from taskemail where account=#{account} and id in
         <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>
@@ -45,7 +134,7 @@
 
 <!--    编辑任务-->
     <update id="updateByContent">
-        update task
+        update taskemail
         <set>
             <if test="content != null and content != '' "> content=#{content},</if>
             update_time=#{updateTime},
@@ -55,7 +144,7 @@
 
 <!--    分页查询-->
     <select id="selectByPage" resultType="com.example.todolist.pojo.vo.TaskVO">
-        select * from task
+        select * from taskemail
         <where>
             <if test="content !=null and content !='' ">
                 and content like concat ('%',#{content},'%')
@@ -67,17 +156,17 @@
 
 <!--      //查询id对应的serialNumber-->
     <select id="selectSerialById" resultType="Integer">
-        select serial_number from task where id =#{id
+        select serial_number from taskemail where id =#{id
     </select>
 
 <!--    拖拽排序-->
     <update id="selectSortBySerial">
-        update task set serial_number=#{serialNumber} where id=#{id}
+        update taskemail set serial_number=#{serialNumber} where id=#{id}
     </update>
 
 <!--    过滤任务-->
     <select id="filterByTask" resultType="com.example.todolist.pojo.po.TaskPO">
-        select * from task
+        select * from taskemail
         <where>
             <if test="content !=null and content !='' ">
                 and content like concat('%',#{content},'%')
